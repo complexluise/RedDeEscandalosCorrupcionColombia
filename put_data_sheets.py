@@ -61,7 +61,7 @@ for filename in list_files:
 
     # Save to Google Sheet Relaciones
     # Append a la hoja Relaciones
-    df_rel_ind_org = pd.DataFrame(json_ER['Relaciones'])
+    df_rel_ind_org = pd.DataFrame(json_NER['Relaciones'])
     df_rel_ind_org['Escandalo'] = escandalo
     df_rel_ind_org['Noticia'] = noticia_url
     gsheet.add_csv_to_sheet(df_rel_ind_org, 'Relaciones Ind-Org')
