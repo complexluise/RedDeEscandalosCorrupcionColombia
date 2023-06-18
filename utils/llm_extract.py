@@ -27,7 +27,7 @@ La salida solo deberia ser en formato JSON con las siguientes claves:
     "rolEnEscandalo"
 "Relaciones": Lista de triplas de las relaciones entre individuos y organizaciones, con la siguiente estructura:
     "Individuo"
-    "Relación"
+    "Relación" // Clasificador de la relación frase verbal + frase preposicional
     "Organización"
     
     
