@@ -72,7 +72,7 @@ Como periodista y científico de redes, está analizando la red social que surgi
 Su tarea es inferir y reconocer las relaciones entre las entidades nombradas SOLO de los siguientes individuos.
 {individuos}
 
-La salida solo deberia ser en formato JSON con las siguientes claves:
+La salida solo deberia ser una lista en formato JSON con las siguientes claves:
 
 Nombre_Individuo_A: Nombre de los individuos que se relacionan
 Detalles Relación: Detalles de la relación
