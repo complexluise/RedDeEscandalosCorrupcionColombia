@@ -61,11 +61,9 @@ def extract_entities(input):
     )
     
     chat_completion_NER = llm_chain_NER(input, return_only_outputs=True)
-    print(chat_completion_NER["text"])
 
-    my_json = json.loads(chat_completion_NER["text"])
     
-    return my_json
+    return chat_completion_NER
     
 
 # Extracción de Relaciones
@@ -106,9 +104,7 @@ def extract_relations(input):
     )
     
     chat_completion_ER = llm_chain_ER(input, return_only_outputs=True)
-    my_json = json.loads(chat_completion_ER["text"])
-    
-    return my_json
+    return chat_completion_ER
 
 
 if __name__ == "__main__":
