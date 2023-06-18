@@ -68,7 +68,6 @@ if __name__ == '__main__':
     # Si no no existe la pagina debe continuar con el siguiente
     if indicator is None:
         LOG.warning("Page not found: %s", pagina)
-        continue
     try:
         response = NewsScraper(url).get_news() # TODO Iniciar fuera del for
         parser = ParserNews(response)
@@ -77,3 +76,6 @@ if __name__ == '__main__':
         with open("data/raw_article/"+pagina+filename+'.txt', "w", encoding="utf-8") as file:
             LOG.info("Saving file: %s", filename)
             file.write(raw_text)
+    except Exception as e:
+        LOG.error("Error processing row: %s", filename)
+        LOG.error(e)
