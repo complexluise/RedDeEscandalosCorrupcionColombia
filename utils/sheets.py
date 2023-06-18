@@ -20,12 +20,13 @@ class GoogleSheet:
 
         self.spreadsheet_id = spreadsheet_id
 
-    def add_csv_to_sheet(self, df, range_name):
+    def add_csv_to_sheet(self, df, range_name, add_headers=False):
         # Convierte el DataFrame a lista de listas
         data = df.values.tolist()
 
-        # Agrega los nombres de las columnas del DataFrame a la lista de datos
-        data.insert(0, df.columns.tolist())
+        if add_headers:
+            # Agrega los nombres de las columnas del DataFrame a la lista de datos
+            data.insert(0, df.columns.tolist())
 
         # Construye el cuerpo para la solicitud de actualización
         body = {
