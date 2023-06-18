@@ -38,3 +38,42 @@ class ParserNews:
         html_indicator = indicator["indicator"]
         div_element = self.soup.find(html_tag, html_indicator)
         return div_element.get_text(strip=True, separator=" ")
+
+
+if __name__ == '__main__':
+    
+    row = {
+        "Link": "https://www.elcolombiano.com/colombia/politica/contraloria-entrego-informe-de-contratos-de-centros-poblados-con-mintic-DB14952895",
+        "Nombre Entidad": "elcolombiano",
+        "Escandalo": "Centros Poblados"
+    }
+    
+    
+    url = row['Link']
+    pagina = row['Nombre Entidad']
+    escandalo = row['Escandalo']
+    filename = url.split("/")[-1][:100]
+    LOG.info("Processing row: %s", filename)
+    
+    pages_indicator = {
+        "elcolombiano": {"html_tag": "div", "indicator": {"id": "articulo_"}},
+        "eluniversal": {"html_tag": "div", "indicator": {"class": "paragraph"}},
+        "eltiempo": {"html_tag": "div", "indicator": {"class": "articulo-contenido"}},
+        "wikipedia": {"html_tag": "div", "indicator": {"class": "mw-parser-output"}},
+        "RT": {"html_tag": "div", "indicator": {"class": "article__text"}},
+    }
+    
+    indicator = pages_indicator.get(pagina, None)
+    
+    # Si no no existe la pagina debe continuar con el siguiente
+    if indicator is None:
+        LOG.warning("Page not found: %s", pagina)
+        continue
+    try:
+        response = NewsScraper(url).get_news() # TODO Iniciar fuera del for
+        parser = ParserNews(response)
+        raw_text = parser.parse_page(indicator)
+        # save file to txt
+        with open("data/raw_article/"+pagina+filename+'.txt', "w", encoding="utf-8") as file:
+            LOG.info("Saving file: %s", filename)
+            file.write(raw_text)
