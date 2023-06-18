@@ -67,8 +67,8 @@ CasoDeCorrupcion "1" -- "1" EntidadGeografica : EstaUbicadoEn
 Individuo "0..*" -- "0..*" Organizacion : EstaAfiliadoCon
 CasoDeCorrupcion "1" -- "0..*" Fuente : ReportadoPor
 CasoDeCorrupcion "1" -- "0..*" Noticia : CubiertoPor
-Noticia "1" -- "0..*" Individuo : Menciona
-Noticia "1" -- "0..*" Organizacion : Menciona
+Noticia "1" -- "0..*" Individuo : MencionadoEn
+Noticia "1" -- "0..*" Organizacion : MencionadoEn
 Noticia "1" -- "0..*" CasoDeCorrupcion : ReportaSobre
 
 @enduml
