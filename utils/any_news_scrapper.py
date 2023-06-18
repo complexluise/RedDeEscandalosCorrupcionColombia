@@ -34,9 +34,14 @@ class ParserNews:
     def parse_page(self, indicator: dict) -> str:
         """Parse the page content and extract the text from the specified div element."""
 
+        
         html_tag = indicator["html_tag"]
-        html_indicator = indicator["indicator"]
-        div_element = self.soup.find(html_tag, html_indicator)
+        
+        if indicator.get("indicator"):
+            html_indicator = indicator["indicator"]
+            div_element = self.soup.find(html_tag, html_indicator)
+        else:
+            div_element = self.soup.find(html_tag)
         return div_element.get_text(strip=True, separator=" ")
 
 
