@@ -70,23 +70,25 @@ def extract_entities(input):
 TEMPLATE_ER = """
 Como periodista y científico de redes, está analizando la red social que surgió de un Escándalo de corrupción en Colombia.
 Su tarea es inferir y reconocer las relaciones entre las entidades nombradas SOLO de los siguientes individuos.
+```
 {individuos}
-
+```
 La salida solo deberia ser una lista en formato JSON con las siguientes claves:
 
-Nombre_Individuo_A: Nombre de los individuos que se relacionan
-Detalles Relación: Detalles de la relación
-Relación: Clasificador de la relación
-Nombre_Individuo_B: Nombre de los individuos que se relacionan
+"Relaciones": Lista de triplas de las relaciones entre individuos, con la siguiente estructura:
+    "Nombre_Individuo_A": Nombre de los individuos que se encuentran entre ```
+    "Detalles Relación": Detalles de la relación
+    "Relación": Clasificador de la relación frase verbal + frase preposicional
+    "Nombre_Individuo_B": Nombre de los individuos que se encuentran entre ```
 
 Si no hay relación entre dos individuos, no escriba nada.
 Los clasificadores de relaciones deben tener una frase verbal como ejemplo (nacio) + frase preposicional (EnCiudad) -> nacioenCiudad:\n 
 
 La tarea se realiza en base al siguiente texto de una noticia:
 
-```
+
 {article}
-```
+
 """
 
 def extract_relations(input):
