@@ -1,0 +1,74 @@
+@startuml
+
+!define RECTANGLE class
+
+' Entidades
+RECTANGLE CasoDeCorrupcion {
+    + ID_Caso : String
+    + Nombre_Caso : String
+    + Naturaleza_Corrupcion : Enum
+    + Fecha_Reportado : Fecha
+    + Fecha_Ocurrido : Fecha
+    + Monto_Involucrado : Moneda
+    + Ubicacion : EntidadGeografica
+    + Cargos_Legales : String
+    + Impacto : String
+    + Estado : Enum
+}
+
+RECTANGLE Individuo {
+    + ID_Individuo : String
+    + Nombre : String
+    + Rol_En_Caso : Enum
+    + Organizaciones_Afiliadas : Lista<Organizacion>
+    + Declaraciones : Lista<String>
+    + Estado_Legal : Enum
+}
+
+RECTANGLE Organizacion {
+    + ID_Organizacion : String
+    + Nombre : String
+    + Tipo : Enum
+    + Rol_En_Caso : Enum
+    + Individuos_Afiliados : Lista<Individuo>
+    + Declaraciones : Lista<String>
+}
+
+RECTANGLE EntidadGeografica {
+    + ID_Ubicacion : String
+    + Nombre : String
+    + Tipo : Enum
+}
+
+RECTANGLE Fuente {
+    + ID_Fuente : String
+    + Tipo : Enum
+    + Titulo : String
+    + Autor : Individuo/Organizacion
+    + Fecha_Publicado : Fecha
+    + URL : String
+}
+
+RECTANGLE Noticia {
+    + ID_Noticia : String
+    + Titulo : String
+    + Autor : Individuo/Organizacion
+    + Fecha_Publicado : Fecha
+    + URL : String
+    + Contenido : String
+    + Casos_Relacionados : Lista<CasoDeCorrupcion>
+    + Individuos_Relacionados : Lista<Individuo>
+    + Organizaciones_Relacionadas : Lista<Organizacion>
+}
+
+' Relaciones
+CasoDeCorrupcion "1" -- "0..*" Individuo : EstaInvolucradoEn
+CasoDeCorrupcion "1" -- "1" EntidadGeografica : EstaUbicadoEn
+Individuo "0..*" -- "0..*" Organizacion : EstaAfiliadoCon
+CasoDeCorrupcion "1" -- "0..*" Fuente : ReportadoPor
+CasoDeCorrupcion "1" -- "0..*" Noticia : CubiertoPor
+Noticia "1" -- "0..*" Individuo : Menciona
+Noticia "1" -- "0..*" Organizacion : Menciona
+Noticia "1" -- "0..*" CasoDeCorrupcion : ReportaSobre
+
+@enduml
