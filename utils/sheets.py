@@ -10,8 +10,8 @@ SAMPLE_SPREADSHEET_ID = '1wnLOldQ2qfqmk_zsJbddg4K4slP9_kSa4xTT02T8Gpo'
 SAMPLE_RANGE_NAME = 'gpt!A1'
 CREDENTIALS_FILE = 'C:/Users/luise/Documents/proyects/google_quickstart/token.json'
 
-
 import pandas as pd
+
 
 class GoogleSheet:
     def __init__(self, spreadsheet_id):
@@ -59,9 +59,10 @@ class GoogleSheet:
             return df
 
 
-
 if __name__ == '__main__':
     gsheet = GoogleSheet(SAMPLE_SPREADSHEET_ID)
     filename = "eluniversalrodolfo-campo-soto-exgerente-del.txt.csv"
-    df = pd.read_csv("G:/Shared drives/GEINCyR - Ciencias Sociales Computacionales Heterodoxas (CSCH)/Carpeta de trabajo/Corruption Network/data/extracted_relationships/" + filename, sep=";")
+    df = pd.read_csv(
+        "G:/Shared drives/GEINCyR - Ciencias Sociales Computacionales Heterodoxas (CSCH)/Carpeta de trabajo/Corruption Network/data/extracted_relationships/" + filename,
+        sep=";")
     gsheet.add_csv_to_sheet(df, SAMPLE_RANGE_NAME)
