@@ -31,11 +31,15 @@ for filename in list_files:
         json_news = json.load(file)
 
     ## Ejemplo
-    input = {"article": json_news["content"]}
+    input = {"article": json_news["Contenido"]}
 
     LOG.info("Extracting entities")
-    chat_completion_NER = extract_entities(input)
-
+    try:
+        chat_completion_NER = extract_entities(input)
+    except Exception as e:
+        LOG.error(e)
+        LOG.info("Continuing with next file")
+        continue
     # save raw response
     with open("data/extracted_entities/" + filename, "w", encoding="utf-8") as file:
         file.write(chat_completion_NER["text"])
@@ -54,7 +58,13 @@ for filename in list_files:
     input.update({"individuos": individuos})
 
     LOG.info("Extracting relations")
-    chat_completion_ER = extract_relations(input)
+
+    try:
+        chat_completion_ER = extract_relations(input)
+    except Exception as e:
+        LOG.error(e)
+        LOG.info("Continuing with next file")
+        continue
 
     # save raw response
     with open("data/extracted_relations/" + filename, "w", encoding="utf-8") as file:
