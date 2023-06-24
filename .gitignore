@@ -172,3 +172,12 @@ cython_debug/
 *.gsheet
 #  Docs Files
 *.gdoc
+
+# graphml Files
+*.graphml
+
+# Audio files
+*.mp3
+
+# Compression Files
+*.tar.gz
