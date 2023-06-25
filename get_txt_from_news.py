@@ -9,7 +9,11 @@ from utils.data_cleaning import replace_chars
 LOG = logging.getLogger("NewsScraper")
 logging.basicConfig(level=logging.INFO)
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
+ 
 char_dict = {
     ":": "_",
     ',': "",
@@ -40,7 +44,7 @@ char_dict = {
     "’": "",
 }
 
-SPREADSHEET_ID = '1jc6qII2_ERr1mOE66WPT0vntL1xc7pT4Jupo3ef552k'  # Links de Noticias
+SPREADSHEET_ID = os.getenv(SPREADSHEET_LINKS)  # Links de Noticias
 RANGE_NAME = 'Links!A1:G1000'
 
 LOG.info("Starting NewsScraper")

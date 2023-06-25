@@ -1,14 +1,17 @@
 import pandas as pd
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1wnLOldQ2qfqmk_zsJbddg4K4slP9_kSa4xTT02T8Gpo'
+SAMPLE_SPREADSHEET_ID = os.getenv("SAMPLE_SPREADSHEET_ID")
 SAMPLE_RANGE_NAME = 'gpt!A1'
-CREDENTIALS_FILE = 'C:/Users/luise/Documents/proyects/google_quickstart/token.json'
+CREDENTIALS_FILE = os.getenv("CREDENTIALS_FILE")
 
 import pandas as pd
 
