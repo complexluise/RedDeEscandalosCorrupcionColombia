@@ -44,7 +44,7 @@ char_dict = {
     "’": "",
 }
 
-SPREADSHEET_ID = os.getenv(SPREADSHEET_LINKS)  # Links de Noticias
+SPREADSHEET_ID = os.getenv("SPREADSHEET_LINKS")  # Links de Noticias
 RANGE_NAME = 'Links!A1:G1000'
 
 LOG.info("Starting NewsScraper")
