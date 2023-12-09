@@ -14,8 +14,8 @@ import logging
 
 from dotenv import load_dotenv
 import os
-load_dotenv()
 
+load_dotenv()
 
 
 # Create logger
@@ -52,15 +52,17 @@ char_dict = {
 
 
 def identify_entity(row):
-    doc_a = nlp(row['Individuo A: String'])
-    doc_b = nlp(row['Individuo B: String'])
+    doc_a = nlp(row["Individuo A: String"])
+    doc_b = nlp(row["Individuo B: String"])
 
     # Asumimos que el primer nombre es el nombre principal
     # Si quieres, puedes modificar este código para manejar múltiples nombres
     ent_a = [ent.label_ for ent in doc_a.ents]
     ent_b = [ent.label_ for ent in doc_b.ents]
 
-    return pd.Series([ent_a[0] if ent_a else 'Unknown', ent_b[0] if ent_b else 'Unknown'])
+    return pd.Series(
+        [ent_a[0] if ent_a else "Unknown", ent_b[0] if ent_b else "Unknown"]
+    )
 
 
 def normalize_names(raw_name):
@@ -90,10 +92,10 @@ gsheet = GoogleSheet(SPREADSHEET_ID)
 nlp = spacy.load("es_core_news_md")
 
 # Obten las relaciones Ind Ind
-df_list = [gsheet.read_sheet_to_df('Relaciones Ind-Ind')]
+df_list = [gsheet.read_sheet_to_df("Relaciones Ind-Ind")]
 
-df_ind_org = gsheet.read_sheet_to_df('Relaciones Ind-Org')
-df_ind_org['Individuo B: String'] = df_ind_org['Organización A: String']
+df_ind_org = gsheet.read_sheet_to_df("Relaciones Ind-Org")
+df_ind_org["Individuo B: String"] = df_ind_org["Organización A: String"]
 df_list.append(df_ind_org)
 df = pd.concat(df_list)
 print(df)
@@ -101,40 +103,54 @@ print(df)
 # Limpieza de datos
 
 # Verifica que no esten vacias Individuo A: String, Individuo B: String, Relación: String
-df = df[df['Individuo A: String'].notna() & df['Individuo B: String'].notna() & df['Relación: String'].notna()]
+df = df[
+    df["Individuo A: String"].notna()
+    & df["Individuo B: String"].notna()
+    & df["Relación: String"].notna()
+]
 
 # exclude self relations
-df = df[df['Individuo A: String'] != df['Individuo B: String']]
+df = df[df["Individuo A: String"] != df["Individuo B: String"]]
 
 # drop duplicates
-df = df.drop_duplicates(subset=['Individuo A: String', 'Individuo B: String', 'Relación: String'])
+df = df.drop_duplicates(
+    subset=["Individuo A: String", "Individuo B: String", "Relación: String"]
+)
 
 # Captura solo las relaciones entre individuos
 df_ind_ind = df.copy()
-df_ind_ind[['IndividuoA_Tipo', 'IndividuoB_Tipo']] = df_ind_ind.apply(identify_entity, axis=1)
+df_ind_ind[["IndividuoA_Tipo", "IndividuoB_Tipo"]] = df_ind_ind.apply(
+    identify_entity, axis=1
+)
 # filter only PERSON-PERSON relations
-df_ind_ind = df_ind_ind[(df_ind_ind['IndividuoA_Tipo'] == 'PER') & (df_ind_ind['IndividuoB_Tipo'] == 'PER')]
+df_ind_ind = df_ind_ind[
+    (df_ind_ind["IndividuoA_Tipo"] == "PER") & (df_ind_ind["IndividuoB_Tipo"] == "PER")
+]
 # normalize names with dictionary
-df_ind_dict = gsheet.read_sheet_to_df('Diccionarios')
-ind_dict = df_ind_dict.set_index('Individuo Presente')['Individuo Normalizado'].to_dict()
+df_ind_dict = gsheet.read_sheet_to_df("Diccionarios")
+ind_dict = df_ind_dict.set_index("Individuo Presente")[
+    "Individuo Normalizado"
+].to_dict()
 
 # normalice names dict
 ind_dict = {key: normalize_names(value) for key, value in ind_dict.items()}
 # replace dict
-df_ind_ind[['Individuo A: String', 'Individuo B: String']] = df_ind_ind[
-    ['Individuo A: String', 'Individuo B: String']] \
-    .applymap(lambda x: ind_dict[x] if x in ind_dict else x)
+df_ind_ind[["Individuo A: String", "Individuo B: String"]] = df_ind_ind[
+    ["Individuo A: String", "Individuo B: String"]
+].applymap(lambda x: ind_dict[x] if x in ind_dict else x)
 # Normalize names
-df_ind_ind[['Individuo A: String', 'Individuo B: String']] = df_ind_ind[
-    ['Individuo A: String', 'Individuo B: String']].applymap(normalize_names)
+df_ind_ind[["Individuo A: String", "Individuo B: String"]] = df_ind_ind[
+    ["Individuo A: String", "Individuo B: String"]
+].applymap(normalize_names)
 
 # categorize relations with dictionary from json
 df_categories = df_ind_ind.copy()
-with open('data/relations_categorized.json') as json_file:
+with open("data/relations_categorized.json") as json_file:
     relations_dict = json.load(json_file)
 
-df_categories['Relación: String'] = df_categories['Relación: String'].apply(
-    lambda x: clasificar_relacion(x, relations_dict))
+df_categories["Relación: String"] = df_categories["Relación: String"].apply(
+    lambda x: clasificar_relacion(x, relations_dict)
+)
 
 # df_filtered = df_filtered.replace({'Individuo A: String': ind_dict, 'Individuo B: String': ind_dict})
 # df_categories.to_csv('data/relations.csv', index=False)
@@ -143,35 +159,35 @@ df_categories['Relación: String'] = df_categories['Relación: String'].apply(
 networks = [
     {
         "name": "all",
-        'dataframe': df,
+        "dataframe": df,
     },
-    {
-        "name": "ind_ind",
-        'dataframe': df_ind_ind
-    },
-    {
-        "name": "ind_ind_cat",
-        'dataframe': df_categories
-    },
-    {
-        "name": "ind_ind_cat_main_component",
-        'dataframe': df_categories
-    }
+    {"name": "ind_ind", "dataframe": df_ind_ind},
+    {"name": "ind_ind_cat", "dataframe": df_categories},
+    {"name": "ind_ind_cat_main_component", "dataframe": df_categories},
 ]
 
 for network in networks:
     # Crear un grafo dirigido vacío
     G = nx.DiGraph()
-    network['dataframe'][['Individuo A: String', 'Individuo B: String', 'Relación: String']] = network['dataframe'][['Individuo A: String', 'Individuo B: String', 'Relación: String']] \
-        .applymap(lambda x: replace_chars(x, char_dict))
+    network["dataframe"][
+        ["Individuo A: String", "Individuo B: String", "Relación: String"]
+    ] = network["dataframe"][
+        ["Individuo A: String", "Individuo B: String", "Relación: String"]
+    ].applymap(
+        lambda x: replace_chars(x, char_dict)
+    )
 
     # Agregar los bordes y etiquetas al grafo
-    for _, row in network['dataframe'].iterrows():
-        G.add_edge(row['Individuo A: String'], row['Individuo B: String'], label=row['Relación: String'])
+    for _, row in network["dataframe"].iterrows():
+        G.add_edge(
+            row["Individuo A: String"],
+            row["Individuo B: String"],
+            label=row["Relación: String"],
+        )
 
     # Solo dejar la componente principal
 
-    if 'component' in network['name']:
+    if "component" in network["name"]:
         largest = max(nx.connected_components(G.to_undirected()), key=len)
         G = G.subgraph(largest).copy()
 

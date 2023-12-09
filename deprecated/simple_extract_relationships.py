@@ -3,7 +3,7 @@ from utils.sheets import GoogleSheet
 import pandas as pd
 
 
-SPREADSHEET_ID = '1wnLOldQ2qfqmk_zsJbddg4K4slP9_kSa4xTT02T8Gpo'
+SPREADSHEET_ID = "1wnLOldQ2qfqmk_zsJbddg4K4slP9_kSa4xTT02T8Gpo"
 
 # Initialize Google Sheet
 gsheet = GoogleSheet(SPREADSHEET_ID)
@@ -25,7 +25,7 @@ Luis Fernando Duque; Representante Legal Unión Temporal Centros Poblados; Colab
 """
 
 # open file and return text
-path_file = 'data/raw_article/eluniversalrodolfo-campo-soto-exgerente-del.txt'
+path_file = "data/raw_article/eluniversalrodolfo-campo-soto-exgerente-del.txt"
 filename = path_file.split("/")[-1]
 with open(path_file, "r", encoding="utf-8") as file:
     text = file.read()
@@ -45,14 +45,23 @@ if my_response:
     # split each line into list of elements
     lines = [line.split(";") for line in lines]
     # create dataframe
-    df = pd.DataFrame(lines, columns=["Nombre Persona 1", "Cargo Persona 1", "Tipo de Vinculo", "Detalles Vinculo",
-                                      "Nombre Persona 2", "Cargo Persona 2"])
+    df = pd.DataFrame(
+        lines,
+        columns=[
+            "Nombre Persona 1",
+            "Cargo Persona 1",
+            "Tipo de Vinculo",
+            "Detalles Vinculo",
+            "Nombre Persona 2",
+            "Cargo Persona 2",
+        ],
+    )
     # save dataframe to csv
     df.to_csv("data/extracted_relationships/" + filename + ".csv", sep=";", index=False)
 
 # Añade a la hoja de cálculo de Google
-gsheet.add_csv_to_sheet(df, 'gpt')
+gsheet.add_csv_to_sheet(df, "gpt")
 
 # save file to txt
-#with open("data/extracted_relationships/" + filename.replace("txt", "csv"), "w", encoding="utf-8") as file:
+# with open("data/extracted_relationships/" + filename.replace("txt", "csv"), "w", encoding="utf-8") as file:
 #    file.write(my_response)
