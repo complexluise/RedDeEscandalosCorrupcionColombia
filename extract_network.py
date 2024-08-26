@@ -6,7 +6,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 from utils.sheets import GoogleSheet
-from utils.data_cleaning import replace_chars
+from utils.cleaners import replace_chars
 
 import spacy
 
@@ -21,34 +21,6 @@ load_dotenv()
 # Create logger
 LOG = logging.getLogger("Extract Network From Sheets")
 logging.basicConfig(level=logging.INFO)
-
-char_dict = {
-    ":": "_",
-    "á": "a",
-    "é": "e",
-    "í": "i",
-    "ì": "i",
-    "ó": "o",
-    "ú": "u",
-    "ñ": "n",
-    "Á": "A",
-    "É": "E",
-    "Í": "I",
-    "Ó": "O",
-    "Ú": "U",
-    "Ñ": "N",
-    "¿": "",
-    "?": "",
-    "¡": "",
-    "!": "",
-    "(": "",
-    ")": "",
-    '"': "",
-    "'": "",
-    "“": "",
-    "”": "",
-    " ": "_",
-}
 
 
 def identify_entity(row):
@@ -69,13 +41,14 @@ def normalize_names(raw_name):
     # lowercase
     raw_name = raw_name.lower()
     # replace chars
-    clean_name = replace_chars(raw_name, char_dict)
+    clean_name = replace_chars(raw_name)
 
     return clean_name
 
 
 # clasifica las relaciones en categorias
-def clasificar_relacion(relacion, relaciones):
+def clasificar_relacion(relacion_raw, relaciones):
+    relacion = relacion_raw.lower().replace(" ", "")
     for categoria, lista_relaciones in relaciones.items():
         if relacion in lista_relaciones:
             return categoria
@@ -145,12 +118,18 @@ df_ind_ind[["Individuo A: String", "Individuo B: String"]] = df_ind_ind[
 
 # categorize relations with dictionary from json
 df_categories = df_ind_ind.copy()
-with open("data/relations_categorized.json") as json_file:
+with open("data/relations_categorized.json", encoding='utf8') as json_file:
     relations_dict = json.load(json_file)
+
+
 
 df_categories["Relación: String"] = df_categories["Relación: String"].apply(
     lambda x: clasificar_relacion(x, relations_dict)
 )
+
+# remover categorias no reconocidas
+mask = df_categories["Relación: String"] == 'relacionNoReconocida'
+df_categories = df_categories[~mask]
 
 # df_filtered = df_filtered.replace({'Individuo A: String': ind_dict, 'Individuo B: String': ind_dict})
 # df_categories.to_csv('data/relations.csv', index=False)
@@ -174,7 +153,7 @@ for network in networks:
     ] = network["dataframe"][
         ["Individuo A: String", "Individuo B: String", "Relación: String"]
     ].applymap(
-        lambda x: replace_chars(x, char_dict)
+        lambda x: replace_chars(x)
     )
 
     # Agregar los bordes y etiquetas al grafo
@@ -183,6 +162,7 @@ for network in networks:
             row["Individuo A: String"],
             row["Individuo B: String"],
             label=row["Relación: String"],
+            scandal=row["mencionadoEnEscandalo: String"]
         )
 
     # Solo dejar la componente principal
