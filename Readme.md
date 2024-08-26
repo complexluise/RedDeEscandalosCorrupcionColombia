@@ -1,7 +1,3 @@
-¡Claro! Aquí tienes una versión mejorada del README, con un tono más coloquial y accesible:
-
----
-
 # Análisis de Redes de Corrupción en Escándalos
 
 ## ¿De qué va este proyecto?
@@ -97,15 +93,3 @@ Este proyecto se enfoca en analizar redes de corrupción utilizando artículos d
 - Añadir soporte para más fuentes de noticias.
 - Mejorar la visualización de las redes con funciones interactivas.
 - Automatizar las actualizaciones de datos de forma regular.
-
-## Contribuyentes
-
-[Aquí puedes listar a los principales contribuyentes del proyecto]
-
-## Licencia
-
-[Especifica aquí la licencia bajo la cual se publica este proyecto]
-
----
-
-¡Listo! Con este README, cualquier persona interesada en el análisis de redes de corrupción puede entender y comenzar a trabajar en tu proyecto de forma rápida y sencilla.
