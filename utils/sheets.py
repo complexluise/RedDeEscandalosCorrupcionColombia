@@ -12,7 +12,7 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = os.getenv("SAMPLE_SPREADSHEET_ID")
 SAMPLE_RANGE_NAME = "gpt!A1"
-CREDENTIALS_FILE = os.getenv("CREDENTIALS_FILE")
+CREDENTIALS_FILE = os.getenv("CREDENTIALS_GOOGLE_API")
 
 import pandas as pd
 
